@@ -1,0 +1,7 @@
+The following are the sources that helped me in completing my project:
+
+1) Kaggle
+2) Udacity's Videos
+3) Stackoverflow
+4) The Python Standard Library Docs
+5) TowardsDataScience

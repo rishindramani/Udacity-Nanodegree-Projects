@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/rishi/Desktop/project_3/chinook.db" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><current_tab id="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="4260"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="Album"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="Album" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk=""><sort/><column_widths/><filter_values/><display_formats/><hidden_columns/><plot_y_axes/></table></browse_table_settings></tab_browse><tab_sql><sql name="Query_1">SELECT Genre.Name AS Type, SUM(InvoiceLine.Quantity) AS Purchases
+FROM InvoiceLine
+JOIN Invoice
+ON InvoiceLine.InvoiceId = Invoice.InvoiceId
+JOIN Track
+ON InvoiceLine.TrackId = Track.TrackId
+JOIN Genre
+ON Track.GenreId = Genre.GenreId
+GROUP BY Genre.Name
+ORDER BY Purchases DESC 
+LIMIT 5</sql><sql name="Query_2">SELECT sub3.Type, sub3.Country, sub3.Purchases
+FROM 
+(SELECT Country, Type, MAX(Purchases) AS No_Purchases
+FROM 
+(SELECT Genre.Name AS Type, Invoice.BillingCountry AS Country, SUM(InvoiceLine.Quantity) AS Purchases
+FROM Invoice
+JOIN InvoiceLine
+ON Invoice.InvoiceId = InvoiceLine.InvoiceId
+JOIN Track
+ON InvoiceLine.TrackId = Track.TrackId
+JOIN Genre
+ON Track.GenreId = Genre.GenreId
+GROUP BY Type, Country) sub1
+GROUP BY Type
+ORDER BY Purchases DESC) sub2
+JOIN (SELECT Genre.Name AS Type, Invoice.BillingCountry AS Country, SUM(InvoiceLine.Quantity) AS Purchases
+FROM Invoice
+JOIN InvoiceLine
+ON Invoice.InvoiceId = InvoiceLine.InvoiceId
+JOIN Track
+ON InvoiceLine.TrackId = Track.TrackId
+JOIN Genre
+ON Track.GenreId = Genre.GenreId
+GROUP BY Type, Country
+ORDER BY Purchases DESC) sub3
+ON sub3.Country = sub2.Country AND sub3.Type = sub2.Type AND sub3.Purchases = sub2.No_Purchases
+LIMIT 5</sql><sql name="Query_3">SELECT Artist.Name, Genre.Name AS Type,SUM(InvoiceLine.Quantity) AS Purchases
+FROM InvoiceLine
+JOIN Invoice
+ON InvoiceLine.InvoiceId = Invoice.InvoiceId
+JOIN Track
+ON InvoiceLine.TrackId = Track.TrackId
+JOIN Genre
+ON Track.GenreId = Genre.GenreId
+JOIN Album
+ON Track.AlbumId = Album.AlbumId
+JOIN Artist
+ON Album.ArtistId = Artist.ArtistId
+GROUP BY Artist.Name, Type
+HAVING SUM(InvoiceLine.Quantity) &gt;= 45
+ORDER BY Purchases DESC </sql><sql name="Query_4">SELECT MediaType.Name AS Media_Type, COUNT(Track.TrackId) AS No_Tracks
+FROM MediaType
+JOIN Track
+ON MediaType.MediaTypeId = Track.MediaTypeId
+GROUP BY Media_Type
+ORDER BY No_Tracks DESC</sql><current_tab id="3"/></tab_sql></sqlb_project>
